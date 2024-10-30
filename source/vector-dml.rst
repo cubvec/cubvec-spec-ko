@@ -1,5 +1,3 @@
-Here's the Korean translation of your document:
-
 ############
 벡터 DML
 ############

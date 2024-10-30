@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "Cubvec Spec Draft"
+project = "CUBVEC Spec Draft"
 copyright = "2024, CUBRID"
 author = "CUBRID"
 
