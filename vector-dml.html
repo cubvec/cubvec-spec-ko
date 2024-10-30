@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>벡터 DML &mdash; Cubvec Spec Draft  문서</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8e72191d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=afa94a99"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="색인" href="genindex.html" />
+    <link rel="search" title="검색" href="search.html" />
+    <link rel="next" title="벡터 인덱스" href="vector-index.html" />
+    <link rel="prev" title="벡터 DDL" href="vector-ddl.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cubvec Spec Draft
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="vector-ddl.html">벡터 DDL</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">벡터 DML</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">테이블에 벡터 생성 및 삽입</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">벡터 읽기</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">가장 가까운 벡터 읽기</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">최근접 이웃 검색에 대한 참고 사항</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">여러 벡터 인덱스에 대한 참고 사항</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">벡터 인덱스 사용 제어</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">벡터 인덱스 사용 강제화</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">벡터 인덱스 사용 방지</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id9">벡터 업데이트</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">벡터 삭제</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vector-index.html">벡터 인덱스</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector-operations.html">벡터 연산</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cubvec Spec Draft</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">벡터 DML</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/vector-dml.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>Here’s the Korean translation of your document:</p>
+<section id="dml">
+<h1>벡터 DML<a class="headerlink" href="#dml" title="Link to this heading"></a></h1>
+<p>이 페이지는 데이터베이스에서 벡터 데이터에 대한 CRUD(생성, 읽기, 업데이트, 삭제) 작업을 설명합니다.</p>
+<section id="id1">
+<h2>테이블에 벡터 생성 및 삽입<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>테이블에 벡터를 삽입하려면 <cite>INSERT</cite> 문을 사용합니다. 벡터는 SQL에서 단일 인용 부호로 감싸진 배열로 표현됩니다.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">embedding</span>
+<span class="p">)</span>
+<span class="k">VALUES</span>
+<span class="w">  </span><span class="p">(</span><span class="s1">&#39;[1,2,3]&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">(</span><span class="s1">&#39;[4,5,6]&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>여기서는 <cite>embedding</cite> 열에 두 개의 벡터를 삽입하고 있습니다.</p></li>
+<li><p>벡터는 문자열(<cite>‘[x,y,z]’</cite>) 형식이어야 하며, <cite>x</cite>, <cite>y</cite>, <cite>z</cite> 는 벡터 요소입니다.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>벡터 읽기<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>테이블에서 벡터를 검색하려면 <cite>SELECT</cite> 문을 사용합니다.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이것은 <cite>items</cite> 테이블에서 처음 5개의 레코드를 가져옵니다.</p></li>
+<li><p>결과에는 테이블에 저장된 벡터 열이 포함됩니다.</p></li>
+</ul>
+<section id="id3">
+<h3>가장 가까운 벡터 읽기<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>벡터의 최근접 이웃을 검색하려면 벡터 거리 연산자 또는 거리 함수를 사용할 수 있습니다.</p>
+<p>거리 연산자를 사용하는 경우:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="s1">&#39;[3,1,2]&#39;</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 쿼리는 <cite>embedding</cite> 열의 벡터와 <cite>[3,1,2]</cite> 벡터 사이의 L2(유클리드) 거리에 따라 결과를 정렬합니다.</p></li>
+</ul>
+<p>거리 함수를 사용하는 경우:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l2_distance</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;[3, 1, 2]&#39;</span><span class="p">)</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 쿼리는 <cite>l2_distance</cite> 함수를 사용하여 벡터 간 거리를 계산하고, 최근접 이웃 순으로 정렬합니다.</p></li>
+</ul>
+<p>이 두 쿼리는 기능적으로 동일합니다.</p>
+<section id="id4">
+<h4>최근접 이웃 검색에 대한 참고 사항<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>벡터 인덱스가 없는 경우, <strong>정확한 최근접 이웃</strong> 검색이 수행됩니다.</p></li>
+<li><p>벡터 인덱스가 있으면 검색은 <strong>근사 최근접 이웃 (ANN)</strong> 알고리즘을 사용하여 더 빠른 결과를 제공합니다.</p></li>
+</ul>
+</section>
+<section id="id5">
+<h4>여러 벡터 인덱스에 대한 참고 사항<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>단일 벡터 열에 여러 인덱스를 생성할 수 있지만, 각 인덱스는 서로 다른 거리 연산자(e.g., L2 거리, 코사인 유사도)에 해당해야 합니다.</p></li>
+<li><p>하나의 벡터 열은 거리 유형당 하나의 인덱스만 가질 수 있습니다.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="id6">
+<h2>벡터 인덱스 사용 제어<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<p>쿼리 최적화 프로그램이 벡터 인덱스를 사용하거나 우회하도록 영향을 줄 수 있습니다.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/*+</span> <span class="pre">VECTOR_INDEX_SCAN</span> <span class="pre">(my_col_name)</span> <span class="pre">*/</span></code>: 최적화 프로그램이 <cite>my_col_name</cite> 열의 벡터 인덱스를 사용하도록 강제합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/*+</span> <span class="pre">NO_VECTOR_INDEX_SCAN</span> <span class="pre">*/</span></code>: 최적화 프로그램이 어떤 벡터 인덱스도 사용하지 않도록 합니다.</p></li>
+</ul>
+<section id="id7">
+<h3>벡터 인덱스 사용 강제화<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>쿼리에서 벡터 인덱스를 명시적으로 사용하려면, 먼저 <cite>embedding</cite> 열에 ANN 벡터 인덱스가 존재해야 합니다.</p>
+<p>인덱스 생성에 대한 세부 사항은 <cite>벡터 인덱스</cite> <a class="reference internal" href="vector-index.html"><span class="doc">벡터 인덱스</span></a> 페이지를 참조하십시오.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="cm">/*+ VECTOR_INDEX_SCAN (embedding) */</span><span class="w"> </span><span class="n">name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l2_distance</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;[3, 1, 2]&#39;</span><span class="p">)</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 예에서는 <cite>VECTOR_INDEX_SCAN</cite> 힌트를 사용하여 <cite>embedding</cite> 열의 벡터 인덱스를 강제로 사용합니다.</p></li>
+<li><p>인덱스가 없으면 힌트는 최적화 프로그램에 의해 조용히 무시됩니다.</p></li>
+</ul>
+</section>
+<section id="id8">
+<h3>벡터 인덱스 사용 방지<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>쿼리에서 벡터 인덱스를 사용하지 않도록 하려면 <cite>NO_VECTOR_INDEX_SCAN</cite> 힌트를 추가하십시오.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="cm">/*+ NO_VECTOR_INDEX_SCAN */</span><span class="w"> </span><span class="n">name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l2_distance</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;[3, 1, 2]&#39;</span><span class="p">)</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 방법은 쿼리가 벡터 인덱스를 우회하여 정확한 검색을 수행하도록 강제합니다.</p></li>
+</ul>
+</section>
+</section>
+<section id="id9">
+<h2>벡터 업데이트<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<p>테이블에 저장된 벡터를 업데이트하려면 <cite>UPDATE</cite> 문을 사용합니다.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">UPDATE</span><span class="w"> </span><span class="n">items</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">embedding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;[1, 2, 3]&#39;</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 예에서는 <cite>id</cite> 가 1인 행의 <cite>embedding</cite> 열을 새로운 벡터 <a href="#id10"><span class="problematic" id="id11">`</span></a>[1, 2, 3]`로 업데이트합니다.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h2>벡터 삭제<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<p>테이블에서 벡터를 삭제하려면 <cite>DELETE</cite> 문을 사용합니다.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 예에서는 <cite>id</cite> 가 1인 <cite>items</cite> 테이블의 행을 삭제하며, 해당 벡터 데이터도 함께 삭제됩니다.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="vector-ddl.html" class="btn btn-neutral float-left" title="벡터 DDL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vector-index.html" class="btn btn-neutral float-right" title="벡터 인덱스" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, CUBRID.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

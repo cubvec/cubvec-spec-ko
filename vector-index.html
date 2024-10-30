@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ko" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>벡터 인덱스 &mdash; Cubvec Spec Draft  문서</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=8e72191d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=afa94a99"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="색인" href="genindex.html" />
+    <link rel="search" title="검색" href="search.html" />
+    <link rel="next" title="벡터 연산" href="vector-operations.html" />
+    <link rel="prev" title="벡터 DML" href="vector-dml.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Cubvec Spec Draft
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="vector-ddl.html">벡터 DDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vector-dml.html">벡터 DML</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">벡터 인덱스</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">벡터 인덱스 생성</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bnf">BNF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">매개변수 설명</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">예시</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">벡터 인덱스 옵션 검사</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">검색 매개변수 구성</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id13">예시</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">벡터 인덱스 업데이트</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">벡터 인덱스 삭제</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">벡터 인덱스 구성</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id17">메모리 사용량</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">추가 구성 참고 사항</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vector-operations.html">벡터 연산</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Cubvec Spec Draft</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">벡터 인덱스</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/vector-index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>벡터 인덱스<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>이 페이지는 CUBRID 데이터베이스에서 벡터 인덱스의 CRUD 작업을 설명합니다.</p>
+<p>현재 CUBRID는 벡터 데이터를 위한 <strong>Hierarchical Navigable Small World (HNSW)</strong> 인덱스만을 지원합니다.</p>
+<section id="id2">
+<h2>벡터 인덱스 생성<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>벡터 인덱스를 생성하려면 다음 사항을 지정해야 합니다:</p>
+<ol class="arabic simple">
+<li><p>인덱스를 생성할 테이블과 열 이름.</p></li>
+<li><p>거리 계산에 사용할 메트릭 함수 (예: 코사인 거리).</p></li>
+<li><p>인덱스 생성 매개변수:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ef_construction</span></code>: 인덱스 생성 시 확인할 이웃의 수를 제어합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">M</span></code>: 그래프에서 노드당 최대 간선(연결) 수를 결정합니다.</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>검색 매개변수:</strong> HNSW 인덱스를 사용하여 쿼리할 때는 다음을 지정해야 합니다:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ef_search</span></code>: 쿼리 중 탐색할 최근접 이웃 후보의 수를 제어합니다.</p></li>
+</ul>
+<section id="bnf">
+<h3>BNF<a class="headerlink" href="#bnf" title="Link to this heading"></a></h3>
+<p>CUBRID에서 벡터 인덱스를 생성하는 공식 문법은 다음과 같습니다:</p>
+<div class="highlight-bnf notranslate"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nc">create_vector_index</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;CREATE VECTOR INDEX&quot; <span class="p">&lt;</span><span class="nc">index_name</span><span class="p">&gt;</span>
+&quot;ON&quot; <span class="p">&lt;</span><span class="nc">table_name</span><span class="p">&gt;</span> &quot;(&quot; <span class="p">&lt;</span><span class="nc">column_name</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="nc">metric_function</span><span class="p">&gt;</span> &quot;)&quot; <span class="p">&lt;</span><span class="nc">with_options</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nc">index_name</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nc">table_name</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nc">column_name</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nc">metric_function</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">cosine</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">l2</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">inner_product</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nc">cosine</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;cosine&quot;
+<span class="p">&lt;</span><span class="nc">l2</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;l2&quot;
+<span class="p">&lt;</span><span class="nc">inner_product</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;inner_product&quot;
+
+<span class="p">&lt;</span><span class="nc">with_options</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;WITH&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">option_list</span><span class="p">&gt;</span> &quot;)&quot;
+
+<span class="p">&lt;</span><span class="nc">option_list</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">option</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">option</span><span class="p">&gt;</span> &quot;,&quot; <span class="p">&lt;</span><span class="nc">option_list</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nc">option</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">parameter</span><span class="p">&gt;</span> &quot;=&quot; <span class="p">&lt;</span><span class="nc">value</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nc">parameter</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;M&quot; | &quot;ef_construction&quot;
+<span class="p">&lt;</span><span class="nc">value</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">integer</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nc">identifier</span><span class="p">&gt;</span> <span class="o">::=</span> [A-Za-z_][A-Za-z_0-9]*
+<span class="p">&lt;</span><span class="nc">integer</span><span class="p">&gt;</span> <span class="o">::=</span> [0-9]+
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>매개변수 설명<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>M</strong>: 이는 HNSW 구조의 각 레이어에서 그래프 내 노드(벡터)가 가질 수 있는 최대 연결 수를 의미합니다. 그래프에서 각 노드의 <a href="#id4"><span class="problematic" id="id5">*</span></a>차수*라고도 합니다. <cite>M</cite> 값이 높아질수록 회상 정확도가 증가하지만 메모리 사용량과 생성 시간이 증가합니다.</p></li>
+<li><p><strong>ef_construction</strong>: 인덱스 생성 단계에서 동적 후보 리스트의 크기를 제어합니다. 그래프에 요소를 삽입할 때 확인할 이웃의 수를 정의합니다. 값이 높을수록 인덱스가 더 정확해지지만 생성 시간이 길어집니다.</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>예시<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>코사인 유사도로 HNSW 인덱스를 생성하는 예:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">VECTOR</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">embedding_hnsw_idx</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="p">(</span><span class="n">embedding</span><span class="w"> </span><span class="n">cosine</span><span class="p">)</span>
+<span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="n">ef_construction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 예에서는 <cite>items</cite> 테이블의 <cite>embedding</cite> 열에 코사인 유사도를 사용하여 <cite>embedding_hnsw_idx</cite> 벡터 인덱스를 생성하며, <a href="#id7"><span class="problematic" id="id8">`</span></a>M`은 16, <a href="#id9"><span class="problematic" id="id10">`</span></a>ef_construction`은 64로 설정합니다.</p></li>
+</ul>
+</section>
+</section>
+<section id="id11">
+<h2>벡터 인덱스 옵션 검사<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<p>테이블에서 인덱스를 선택하여 인덱스 구성을 검사할 수 있습니다.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="n">embedding_hnsw_idx</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>이 쿼리는 <cite>embedding_hnsw_idx</cite> 인덱스의 세부 정보를 검색합니다.</p>
+</section>
+<section id="id12">
+<h2>검색 매개변수 구성<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<p><cite>ef_search</cite> 매개변수는 검색 쿼리 중에 탐색할 최근접 이웃 후보 수를 제어합니다.</p>
+<ul class="simple">
+<li><p><strong>ef_search</strong>: 검색 시 탐색 팩터로, 알고리즘이 최근접 이웃을 찾을 때 탐색할 후보 노드의 수를 결정합니다. <cite>ef_search</cite> 값이 높을수록 회상 정확도가 향상되지만 쿼리 시간이 느려질 수 있습니다.</p></li>
+<li><p>기본적으로 <cite>ef_search</cite> 가 지정되지 않으면 인덱스 생성 시 사용된 <cite>ef_construction</cite> 값과 동일하게 설정됩니다.</p></li>
+</ul>
+<section id="id13">
+<h3>예시<a class="headerlink" href="#id13" title="Link to this heading"></a></h3>
+<p>쿼리에서 <cite>ef_search</cite> 매개변수를 구성하는 방법:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="cm">/*+ VECTOR_INDEX_SCAN (embedding) */</span><span class="w"> </span><span class="n">name</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">items</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l2_distance</span><span class="p">(</span><span class="n">embedding</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;[3, 1, 2]&#39;</span><span class="p">)</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span>
+<span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">ef_search</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">64</span><span class="p">);</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 쿼리에서는 <cite>VECTOR_INDEX_SCAN</cite> 힌트를 사용하여 벡터 인덱스를 강제로 적용하고, 검색 정확도를 제어하기 위해 <cite>ef_search</cite> 값을 64로 설정합니다.</p></li>
+</ul>
+</section>
+</section>
+<section id="id14">
+<h2>벡터 인덱스 업데이트<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<p>현재 CUBRID에서는 벡터 인덱스 업데이트를 지원하지 않습니다. 매개변수를 변경하려면 인덱스를 재생성해야 합니다.</p>
+</section>
+<section id="id15">
+<h2>벡터 인덱스 삭제<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<p>벡터 인덱스를 삭제하려면 <cite>DROP INDEX</cite> 명령을 사용합니다.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">DROP</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">embedding_hnsw_idx</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 명령은 <cite>items</cite> 테이블에서 <cite>embedding_hnsw_idx</cite> 인덱스를 삭제합니다.</p></li>
+</ul>
+</section>
+<section id="id16">
+<h2>벡터 인덱스 구성<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<section id="id17">
+<h3>메모리 사용량<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<p>벡터 인덱스에 사용할 메모리는 <cite>cubrid.conf</cite> 구성 파일에서 설정할 수 있습니다. <cite>vector_memory_size</cite> 매개변수는 벡터 인덱스 작업에 할당된 메모리 크기를 지정합니다.</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="c1"># 파일명: cubrid.conf</span>
+<span class="n">vector_memory_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="n">G</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>이 예에서는 벡터 인덱스에 할당된 메모리 크기를 8GB로 설정합니다.</p></li>
+</ul>
+</section>
+</section>
+<section id="id18">
+<h2>추가 구성 참고 사항<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>대규모 데이터셋의 경우 인덱스 생성이나 쿼리 처리 중 메모리 오버플로를 방지하기 위해 <a href="#id19"><span class="problematic" id="id20">`</span></a>vector_memory_size`가 충분히 높게 설정되었는지 확인하십시오.</p></li>
+<li><p><cite>M</cite>, <cite>ef_construction</cite>, <cite>ef_search</cite> 값을 조정하여 검색 정확도, 속도, 메모리 사용량을 애플리케이션 요구 사항에 맞게 균형을 맞출 수 있습니다.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="vector-dml.html" class="btn btn-neutral float-left" title="벡터 DML" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="vector-operations.html" class="btn btn-neutral float-right" title="벡터 연산" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, CUBRID.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
