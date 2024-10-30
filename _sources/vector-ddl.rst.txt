@@ -1,5 +1,3 @@
-Here's the Korean translation with spaces around italic formatting:
-
 ########
  벡터 DDL
 ########
