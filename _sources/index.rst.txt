@@ -1,11 +1,11 @@
 ..
-   Cubvec Spec Draft documentation master file, created by
+   Cubvec Spec Draft Documentation master file, created by
    sphinx-quickstart on Wed Oct 30 21:07:31 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 #################################
- Cubvec Spec Draft documentation
+ Cubvec Spec Draft Documentation
 #################################
 
 Add your content using ``reStructuredText`` syntax. See the
